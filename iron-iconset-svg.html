@@ -67,6 +67,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         type: Number,
         value: 24
       },
+      
+      /**
+       * ViewBox of an individual icon. Brings more control on the size, allowing non-square icons. Will override "size" if specified.
+       */
+      viewBox: {
+        type: String,
+        value: ''
+      },
 
       /**
        * Set to true to enable mirroring of icons where specified when they are
@@ -205,7 +213,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // create the icon map on-demand, since the iconset itself has no discrete
       // signal to know when it's children are fully parsed
       this._icons = this._icons || this._createIconMap();
-      return this._prepareSvgClone(this._icons[id], this.size, mirrorAllowed);
+      return this._prepareSvgClone(this._icons[id], this.viewBox || '0 0 ' + this.size + ' ' + this.size, mirrorAllowed);
     },
 
     /**
@@ -214,11 +222,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @param {Boolean} mirrorAllowed
      * @return {Element}
      */
-    _prepareSvgClone: function(sourceSvg, size, mirrorAllowed) {
+    _prepareSvgClone: function(sourceSvg, viewBox, mirrorAllowed) {
       if (sourceSvg) {
         var content = sourceSvg.cloneNode(true),
             svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-            viewBox = content.getAttribute('viewBox') || '0 0 ' + size + ' ' + size,
             cssText = 'pointer-events: none; display: block; width: 100%; height: 100%;';
 
         if (mirrorAllowed && content.hasAttribute('mirror-in-rtl')) {
